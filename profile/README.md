@@ -14,12 +14,13 @@ via a PSP after KYC verification.
 
 Three independent components:
 
-
+```
   [ playsmart-app ]  --SDK-->  [ playsmart-sdk ]  --HTTP-->  [ playsmart-api ]
    Unity launcher              C# tracking lib               Bun + TypeScript
         |                                                           |
         +-- launches --> [ playsmart-{gamename} ]                [ CMS ]
                           Unity child games
+```
 
 
 playsmart-extension-sdk provides reusable Unity UI and components (bootscene, popups)
