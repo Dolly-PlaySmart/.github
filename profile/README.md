@@ -35,7 +35,7 @@ imported by both playsmart-app and child games.
 
 | Repo | Role | Stack |
 |------|------|-------|
-| [playsmart-app](../../playsmart-app) | Unity parent app (launcher) | Unity / C# |
+| [[playsmart-app](../../playsmart-app](https://github.com/Dolly-PlaySmart/playsmart-sdk) | Unity parent app (launcher) | Unity / C# |
 | [playsmart-api](../../playsmart-api) | Backend API | Bun / TypeScript |
 | [playsmart-sdk](../../playsmart-sdk) | C# tracking SDK | C# |
 | [playsmart-extension-sdk](../../playsmart-extension-sdk) | Unity UI kit | Unity / C# |
