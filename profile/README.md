@@ -35,12 +35,12 @@ imported by both playsmart-app and child games.
 
 | Repo | Role | Stack |
 |------|------|-------|
-| [[playsmart-app]([../../playsmart-app](https://github.com/Dolly-PlaySmart/playsmart-sdk)](https://github.com/Dolly-PlaySmart/playsmart-app)) | Unity parent app (launcher) | Unity / C# |
-| [playsmart-api]([[../../playsmart-api](https://github.com/Dolly-PlaySmart/playsmart-extension-sdk)](https://github.com/Dolly-PlaySmart/playsmart-api)) | Backend API | Bun / TypeScript |
-| [playsmart-sdk]([../../playsmart-sdk](https://github.com/Dolly-PlaySmart/playsmart-sdk)) | C# tracking SDK | C# |
-| [playsmart-extension-sdk][([../../playsmart-extension-sdk)](https://github.com/Dolly-PlaySmart/playsmart-extension-sdk) | Unity UI kit | Unity / C# |
-| [playsmart-riddle-rails](../../playsmart-riddle-rails) | Child game — Riddle Rails | Unity / C# |
-| [playsmart-knife-king](../../playsmart-knife-king) | Child game — Knife King | Unity / C# |
+| [playsmart-app](https://github.com/Dolly-PlaySmart/playsmart-app) | Unity parent app (launcher) | Unity / C# |
+| [playsmart-api](https://github.com/Dolly-PlaySmart/playsmart-api) | Backend API | Bun / TypeScript |
+| [playsmart-sdk](https://github.com/Dolly-PlaySmart/playsmart-sdk) | C# tracking SDK | C# |
+| [playsmart-extension-sdk](https://github.com/Dolly-PlaySmart/playsmart-extension-sdk) | Unity UI kit | Unity / C# |
+| [playsmart-riddle-rails](https://github.com/Dolly-PlaySmart/playsmart-riddle-rails) | Child game — Riddle Rails | Unity / C# |
+| [playsmart-knife-king](https://github.com/Dolly-PlaySmart/playsmart-knife-king) | Child game — Knife King | Unity / C# |
 | playsmart-{gamename} | Future child games (one repo per game) | Unity / C# |
 
 
