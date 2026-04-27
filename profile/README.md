@@ -68,7 +68,7 @@ Read the GitBook first (architecture + onboarding), then the repo READMEs.
 ## Documentation
 
 
-📖 [Play Smart GitBook]({url}) — architecture, integration guides, onboarding
+📖 [Play Smart GitBook](https://app.gitbook.com/o/0UAIVIFxd9k5njYkK5ZJ/s/Kzr1uYpJ9HqZ6hUT9miW/) — architecture, integration guides, onboarding
 
 
 ---
