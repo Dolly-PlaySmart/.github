@@ -30,7 +30,7 @@ jobs:
 
       - name: Run health check
         env:
-          GH_TOKEN: ${{ secrets.HEALTH_BOT_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           FORCE: ${{ github.event_name == 'workflow_dispatch' && '1' || '0' }}
         run: node .github/scripts/health-check.js

@@ -36,7 +36,7 @@ The script gates on the Paris hour and exits early when it is not 08, so only on
 
 Set on `Dolly-PlaySmart/.github` repo:
 
-- `HEALTH_BOT_TOKEN` — fine-grained PAT, owner `Dolly-PlaySmart`, all repositories, with:
+- `GH_TOKEN` — fine-grained PAT, owner `Dolly-PlaySmart`, all repositories, with:
   - Repository: Metadata (read), Contents (read), Administration (read), Issues (write).
 - `SLACK_WEBHOOK_URL` — incoming webhook for `#play-smart`.
 
