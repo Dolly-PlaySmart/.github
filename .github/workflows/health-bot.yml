@@ -1,0 +1,36 @@
+name: Weekly health bot
+
+on:
+  schedule:
+    # GitHub Actions cron is UTC. Two firings cover Paris 08:00 across DST:
+    #   06:00 UTC = 08:00 Paris in summer (CEST)
+    #   07:00 UTC = 08:00 Paris in winter (CET)
+    # The script gates on Paris hour to keep a single weekly post.
+    - cron: "0 6 * * 1"
+    - cron: "0 7 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: health-bot-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Run health check
+        env:
+          GH_TOKEN: ${{ secrets.HEALTH_BOT_TOKEN }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          FORCE: ${{ github.event_name == 'workflow_dispatch' && '1' || '0' }}
+        run: node .github/scripts/health-check.js
