@@ -58,9 +58,9 @@ jobs:
             ~/.bun/install/cache
             ${{ inputs.working-directory }}/node_modules
             ${{ inputs.working-directory }}/*/node_modules
-          key: ${{ runner.os }}-bun-${{ hashFiles(format('{0}/bun.lock', inputs.working-directory), format('{0}/bun.lockb', inputs.working-directory)) }}
+          key: ${{ runner.os }}-bun-${{ inputs.bun-version }}-${{ inputs.working-directory }}-${{ hashFiles(format('{0}/bun.lock', inputs.working-directory), format('{0}/bun.lockb', inputs.working-directory)) }}
           restore-keys: |
-            ${{ runner.os }}-bun-
+            ${{ runner.os }}-bun-${{ inputs.bun-version }}-${{ inputs.working-directory }}-
 
       - name: Install dependencies
         run: bun install
