@@ -92,8 +92,12 @@ const fileExists = async (owner, repo, path) => {
 };
 
 const branchProtected = async (owner, repo, branch) => {
-  const r = await gh(`/repos/${owner}/${repo}/branches/${encodeURIComponent(branch)}/protection`);
-  return !r.__notFound;
+  // /rules/branches/{branch} returns both legacy branch protection rules and
+  // modern repository/org rulesets in one shot, and only needs metadata:read
+  // (no administration scope required).
+  const rules = await gh(`/repos/${owner}/${repo}/rules/branches/${encodeURIComponent(branch)}`);
+  if (rules.__notFound) return false;
+  return Array.isArray(rules) && rules.length > 0;
 };
 
 const daysSince = (iso) => Math.floor((Date.now() - new Date(iso).getTime()) / 86400000);
