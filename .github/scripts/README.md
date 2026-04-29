@@ -37,10 +37,10 @@ The script gates on the Paris hour and exits early when it is not 08, so only on
 Set on `Dolly-PlaySmart/.github` repo:
 
 - `GH_TOKEN` — fine-grained PAT, owner `Dolly-PlaySmart`, all repositories, with:
-  - Repository: Metadata (read), Contents (read), Administration (read), Issues (write).
+  - Repository: Metadata (read), Contents (read), Issues (write).
 - `SLACK_WEBHOOK_URL` — incoming webhook for `#play-smart`.
 
-`administration: read` is what gates branch-protection lookups; the default `GITHUB_TOKEN` cannot do it.
+The branch-protection check uses `/rules/branches/{branch}`, which sees both legacy branch protection rules and modern rulesets and only requires `metadata:read`.
 
 ## Local dry run
 
