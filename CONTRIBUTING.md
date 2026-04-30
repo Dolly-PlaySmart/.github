@@ -24,3 +24,7 @@
 - `ApiThrillz` → PascalCase, product at end
 - `Unity-Core-Project` → not kebab-case, unclear product, role unclear
 - `Smart-Play` / `PlaySmart-API` → inconsistent naming for same product
+
+
+## Games Template
+https://github.com/Dolly-PlaySmart/playsmart-game-template
