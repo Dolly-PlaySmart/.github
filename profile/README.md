@@ -39,7 +39,7 @@ imported by both playsmart-app and child games.
 | [playsmart-api](https://github.com/Dolly-PlaySmart/playsmart-api) | Backend API | Bun / TypeScript |
 | [playsmart-sdk](https://github.com/Dolly-PlaySmart/playsmart-sdk) | C# tracking SDK | C# |
 | [playsmart-extension-sdk](https://github.com/Dolly-PlaySmart/playsmart-extension-sdk) | Unity UI kit | Unity / C# |
-| [playsmart-game-template](https://github.com/Dolly-PlaySmart/playsmart-game-template) | Unity game template for creating new Play Smart mobile titles.
+| [playsmart-game-template](https://github.com/Dolly-PlaySmart/playsmart-game-template) | Unity game template for creating new Play Smart mobile titles. | Unity / C# |
 | [playsmart-riddle-rails](https://github.com/Dolly-PlaySmart/playsmart-riddle-rails) | Child game — Riddle Rails | Unity / C# |
 | [playsmart-knife-king](https://github.com/Dolly-PlaySmart/playsmart-knife-king) | Child game — Knife King | Unity / C# |
 | playsmart-{gamename} | Future child games (one repo per game) | Unity / C# |
