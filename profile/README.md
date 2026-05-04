@@ -42,6 +42,7 @@ imported by both playsmart-app and child games.
 | [playsmart-game-template](https://github.com/Dolly-PlaySmart/playsmart-game-template) | Unity game template for creating new Play Smart mobile titles. | Unity / C# |
 | [playsmart-riddle-rails](https://github.com/Dolly-PlaySmart/playsmart-riddle-rails) | Child game — Riddle Rails | Unity / C# |
 | [playsmart-knife-king](https://github.com/Dolly-PlaySmart/playsmart-knife-king) | Child game — Knife King | Unity / C# |
+| [playsmart-mahjong-mania](https://github.com/Dolly-PlaySmart/playsmart-mahjong-mania) | Child game — Mahjong Mania | Unity / C# |
 | playsmart-{gamename} | Future child games (one repo per game) | Unity / C# |
 
 
