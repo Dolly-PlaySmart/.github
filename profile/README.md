@@ -43,6 +43,7 @@ imported by both playsmart-app and child games.
 | [playsmart-riddle-rails](https://github.com/Dolly-PlaySmart/playsmart-riddle-rails) | Child game — Riddle Rails | Unity / C# |
 | [playsmart-knife-king](https://github.com/Dolly-PlaySmart/playsmart-knife-king) | Child game — Knife King | Unity / C# |
 | [playsmart-mahjong-mania](https://github.com/Dolly-PlaySmart/playsmart-mahjong-mania) | Child game — Mahjong Mania | Unity / C# |
+| [playsmart-fishescape](https://github.com/Dolly-PlaySmart/playsmart-fishescape) | Child game — Fish Escape | Unity / C# |
 | playsmart-{gamename} | Future child games (one repo per game) | Unity / C# |
 
 
