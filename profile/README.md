@@ -44,6 +44,7 @@ imported by both playsmart-app and child games.
 | [playsmart-knife-king](https://github.com/Dolly-PlaySmart/playsmart-knife-king) | Child game — Knife King | Unity / C# |
 | [playsmart-mahjong-mania](https://github.com/Dolly-PlaySmart/playsmart-mahjong-mania) | Child game — Mahjong Mania | Unity / C# |
 | [playsmart-fishescape](https://github.com/Dolly-PlaySmart/playsmart-fishescape) | Child game — Fish Escape | Unity / C# |
+| [playsmart-checkmate-chess](https://github.com/Dolly-PlaySmart/playsmart-checkmate-chess) | Child game — Checkmate Chess | Unity / C# |
 | playsmart-{gamename} | Future child games (one repo per game) | Unity / C# |
 
 
