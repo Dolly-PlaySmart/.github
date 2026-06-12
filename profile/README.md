@@ -38,6 +38,8 @@ imported by both playsmart-app and child games.
 | [playsmart-app](https://github.com/Dolly-PlaySmart/playsmart-app) | Unity parent app (launcher) | Unity / C# |
 | [playsmart-api](https://github.com/Dolly-PlaySmart/playsmart-api) | Backend API | Bun / TypeScript |
 | [playsmart-sdk](https://github.com/Dolly-PlaySmart/playsmart-sdk) | C# tracking SDK | C# |
+| [playsmart-support](https://github.com/Dolly-PlaySmart/playsmart-support) Support Platform | HTML |
+| [playsmart-withdraw-services](https://github.com/Dolly-PlaySmart/withdraw-services) | Withdraw Services | TypeScript |
 | [playsmart-extension-sdk](https://github.com/Dolly-PlaySmart/playsmart-extension-sdk) | Unity UI kit | Unity / C# |
 | [playsmart-game-template](https://github.com/Dolly-PlaySmart/playsmart-game-template) | Unity game template for creating new Play Smart mobile titles. | Unity / C# |
 | [playsmart-riddle-rails](https://github.com/Dolly-PlaySmart/playsmart-riddle-rails) | Child game — Riddle Rails | Unity / C# |
