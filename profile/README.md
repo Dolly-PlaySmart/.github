@@ -48,6 +48,10 @@ imported by both playsmart-app and child games.
 | [playsmart-fishescape](https://github.com/Dolly-PlaySmart/playsmart-fishescape) | Child game — Fish Escape | Unity / C# |
 | [playsmart-checkmate-chess](https://github.com/Dolly-PlaySmart/playsmart-checkmate-chess) | Child game — Checkmate Chess | Unity / C# |
 | [playsmart-glyph-garden](https://github.com/Dolly-PlaySmart/playsmart-glyph-garden) | Child game — Glyph Garden | Unity / C# |
+| [playsmart-pengudoku](https://github.com/Dolly-PlaySmart/playsmart-pengudoku) | Child game — Pengudoku | Unity / C# |
+| [playsmart-screw-scramble](https://github.com/Dolly-PlaySmart/playsmart-screw-scramble) | Child game — Screw Scramble | Unity / C# |
+| [playsmart-solitaire-stars](https://github.com/Dolly-PlaySmart/playsmart-Solitaire-Stars) | Child game — Solitaire Stars | Unity / C# |
+| [playsmart-color-cascade](https://github.com/Dolly-PlaySmart/playsmart-color-cascade) | Child game — Color Cascade | Unity / C# |
 | playsmart-{gamename} | Future child games (one repo per game) | Unity / C# |
 
 
