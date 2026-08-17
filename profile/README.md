@@ -52,6 +52,9 @@ imported by both playsmart-app and child games.
 | [playsmart-screw-scramble](https://github.com/Dolly-PlaySmart/playsmart-screw-scramble) | Child game — Screw Scramble | Unity / C# |
 | [playsmart-solitaire-stars](https://github.com/Dolly-PlaySmart/playsmart-Solitaire-Stars) | Child game — Solitaire Stars | Unity / C# |
 | [playsmart-color-cascade](https://github.com/Dolly-PlaySmart/playsmart-color-cascade) | Child game — Color Cascade | Unity / C# |
+| [playsmart-blackjack](https://github.com/Dolly-PlaySmart/playsmart-blackjack) | Child game — Blackjack | Unity / C# |
+| [playsmart-bubble-shooter](https://github.com/Dolly-PlaySmart/playsmart-bubble-shooter) | Child game — Bubble Shooter | Unity / C# |
+| [playsmart-draw-dots](https://github.com/Dolly-PlaySmart/playsmart-draw-dots) | Child game — Draw Dots | Unity / C# |
 | playsmart-{gamename} | Future child games (one repo per game) | Unity / C# |
 
 
