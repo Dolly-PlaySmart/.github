@@ -55,6 +55,7 @@ imported by both playsmart-app and child games.
 | [playsmart-blackjack](https://github.com/Dolly-PlaySmart/playsmart-blackjack) | Child game — Blackjack | Unity / C# |
 | [playsmart-bubble-shooter](https://github.com/Dolly-PlaySmart/playsmart-bubble-shooter) | Child game — Bubble Shooter | Unity / C# |
 | [playsmart-draw-dots](https://github.com/Dolly-PlaySmart/playsmart-draw-dots) | Child game — Draw Dots | Unity / C# |
+| [playsmart-arrow-go](https://github.com/Dolly-PlaySmart/playsmart-arrow-go) | Child game — Arrow Go! | Unity / C# |
 | playsmart-{gamename} | Future child games (one repo per game) | Unity / C# |
 
 
