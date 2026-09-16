@@ -57,6 +57,8 @@ imported by both playsmart-app and child games.
 | [playsmart-draw-dots](https://github.com/Dolly-PlaySmart/playsmart-draw-dots) | Child game — Draw Dots | Unity / C# |
 | [playsmart-arrow-go](https://github.com/Dolly-PlaySmart/playsmart-arrow-go) | Child game — Arrow Go! | Unity / C# |
 | [playsmart-word-search](https://github.com/Dolly-PlaySmart/playsmart-word-search) | Child game — Word Search | Unity / C# |
+| [playsmart-block-blitz](https://github.com/Dolly-PlaySmart/playsmart-block-blitz) | Child game — Block Blitz | Unity / C# |
+| [playsmart-liquid-lab](https://github.com/Dolly-PlaySmart/playsmart-liquid-lab) | Child game — Word Search | Unity / C# |
 | playsmart-{gamename} | Future child games (one repo per game) | Unity / C# |
 
 
