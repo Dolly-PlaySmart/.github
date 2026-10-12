@@ -59,6 +59,8 @@ imported by both playsmart-app and child games.
 | [playsmart-word-search](https://github.com/Dolly-PlaySmart/playsmart-word-search) | Child game — Word Search | Unity / C# |
 | [playsmart-block-blitz](https://github.com/Dolly-PlaySmart/playsmart-block-blitz) | Child game — Block Blitz | Unity / C# |
 | [playsmart-liquid-lab](https://github.com/Dolly-PlaySmart/playsmart-liquid-lab) | Child game — Liquid Lab | Unity / C# |
+| [playsmart-color-block-escape](https://github.com/Dolly-PlaySmart/playsmart-color-block-escape) | Child game — Color Block Escape | Unity / C# |
+| [playsmart-tower-smash](https://github.com/Dolly-PlaySmart/playsmart-tower-smash) | Child game — Tower Smash | Unity / C# |
 | playsmart-{gamename} | Future child games (one repo per game) | Unity / C# |
 
 
