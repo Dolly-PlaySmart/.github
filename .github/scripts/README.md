@@ -64,7 +64,7 @@ Every non-archived repo in the org (excluding `.github`) whose `Packages/manifes
 | Extension SDK | ref of `gg.dolly.playsmart.extension.sdk` (`#v1.0.97` → `v1.0.97`; a `file:` path is flagged) |
 | Tracking SDK | ref of `gg.dolly.playsmart.sdk` |
 | AppsFlyer | ref of `appsflyer-unity-plugin`; a branch pin (`#upm`) also shows the tag its `packages-lock.json` resolves |
-| one column per network | `com.applovin.mediation.adapters.<network>.android` / `.ios`, decoded to the network SDK version (`25050000.0.0` → `25.5.0`) |
+| Mintegral, Liftoff, InMobi, DT Exchange, AdMob | `com.applovin.mediation.adapters.<key>.android` / `.ios` (keys `mintegral`, `vungle`, `inmobi`, `fyber`, `google`), decoded to the network SDK version (`25050000.0.0` → `25.5.0`). Other adapters are ignored; the list is `NETWORKS` in the script |
 
 `playsmart-game-template` on `main` is the reference row. Every other cell that differs from it is marked ⚠️, and ❌ when the template has the package and the repo doesn't.
 
