@@ -43,6 +43,16 @@ const APPSFLYER_PACKAGE = "appsflyer-unity-plugin";
 const APPSFLYER_REPO = "AppsFlyerSDK/appsflyer-unity-plugin";
 const ADAPTER_RE = /^com\.applovin\.mediation\.adapters\.([^.]+)\.(android|ios)$/;
 
+// Ad networks tracked in the table, in column order: AppLovin package key -> name ad ops uses.
+// Other adapters a game may have are ignored.
+const NETWORKS = [
+  { key: "mintegral", title: "Mintegral" },
+  { key: "vungle", title: "Liftoff" },
+  { key: "inmobi", title: "InMobi" },
+  { key: "fyber", title: "DT Exchange" },
+  { key: "google", title: "AdMob" },
+];
+
 const SKIP_REPOS = new Set([".github"]);
 
 const gh = async (path, init = {}) => {
@@ -184,19 +194,16 @@ const adapterCell = (a) => {
   return android === ios ? android : `${android} / ${ios}`;
 };
 
-// Template first (reference), then the rest alphabetically. Adapter columns follow the
-// template's order, then any network only some games use.
+// Template first (reference), then the rest alphabetically.
 const buildTable = (reference, others) => {
   const rows = [reference, ...others];
-  const networks = [...Object.keys(reference.adapters).sort()];
-  for (const r of others) for (const n of Object.keys(r.adapters).sort()) if (!networks.includes(n)) networks.push(n);
 
   const columns = [
     { title: "MAX", get: (r) => r.cells.max },
     { title: "Extension SDK", get: (r) => r.cells.extension },
     { title: "Tracking SDK", get: (r) => r.cells.tracking },
     { title: "AppsFlyer", get: (r) => r.cells.appsflyer },
-    ...networks.map((n) => ({ title: n, get: (r) => adapterCell(r.adapters[n]) })),
+    ...NETWORKS.map((n) => ({ title: n.title, get: (r) => adapterCell(r.adapters[n.key]) })),
   ];
 
   const lines = [
@@ -233,6 +240,7 @@ const buildMarkdown = (reference, others) => {
     "",
     `Reference: \`${reference.name}\` on \`${reference.ref}\`. Every other repo is read from its default branch and compared cell by cell: ⚠️ differs from the reference, ❌ the reference has it and this repo doesn't.`,
     "",
+    `- Ad networks: ${NETWORKS.map((n) => n.title).join(", ")} (Liftoff = AppLovin's \`vungle\` adapter, DT Exchange = \`fyber\`, AdMob = \`google\`)`,
     `- Repos: **${others.length + 1}** (every repo whose \`Packages/manifest.json\` depends on \`${MARKER_PACKAGE}\`)`,
     `- Aligned with the reference: **${aligned}** / ${others.length}`,
     "",
