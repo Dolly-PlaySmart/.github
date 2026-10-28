@@ -1,4 +1,4 @@
-# Reusable workflows
+﻿# Reusable workflows
 
 Org-wide CI workflows. Any repo in `Dolly-PlaySmart` can call them with a few lines of YAML.
 
@@ -71,10 +71,10 @@ jobs:
 
 ### Required secrets (org-level, already set on `Dolly-PlaySmart`)
 
-- `UNITY_EMAIL`, `UNITY_PASSWORD`, `UNITY_SERIAL` — Pro license activation.
-- `GH_TOKEN` — optional; PAT used by Unity to fetch private UPM packages from other org repos.
+- `UNITY_EMAIL`, `UNITY_PASSWORD`, `UNITY_SERIAL` â€” Pro license activation.
+- `GH_TOKEN` â€” optional; PAT used by Unity to fetch private UPM packages from other org repos.
 
-The caller MUST pass these with `secrets: inherit` (or an explicit mapping) — public reusable workflows do not see private secrets unless the private caller forwards them.
+The caller MUST pass these with `secrets: inherit` (or an explicit mapping) â€” public reusable workflows do not see private secrets unless the private caller forwards them.
 
 ## brand-kit.yml
 
@@ -115,7 +115,7 @@ The run fails (red) if the folder is missing or empty, if the key is not availab
 ```
 BrandKit/
   Logo/        App icon/    Game logos/   Game icons/   Event icons/
-  Characters/  Backgrounds/ UI/           Game items/   Currency/
+  Characters/  Backgrounds/ UI/           Items/        Currency/
   Screens/       gameplay screenshots (Game screens)
   Screenshots/   Play Store screenshots (Store screenshots), optional
   SFX/         Music/       Fonts/        Colours/
@@ -124,3 +124,27 @@ BrandKit/
 Unity `.meta`, `.psd` and hidden files are ignored. Files up to 300 MB.
 
 **Game names in the library.** Thrillz, Play Smart, Pengudoku, Knife King, Tower Smash, Mahjong Mania, Screw Scramble, Riddle Rails, Solitaire Stars, Black Jack, Bubble Shooter, Arrow Go!, Color Cascade, Fish Escape, Word Search Wonder, Glyph Garden, Checkmate Chess, Clue Cases, Draw Dots, Liquid Lab, Block Blitz, Color Block Escape.
+
+**Exporting the kit from the game repo.** `.github/scripts/export_brandkit.py` builds `BrandKit/` from the repo, so it is rerun when the game changes. Clone `Dolly-PlaySmart/.github` once, then, from anywhere:
+
+```
+python3 .github/.github/scripts/export_brandkit.py <path to the game repo> --dry-run   # what would be copied
+python3 .github/.github/scripts/export_brandkit.py <path to the game repo>             # writes <repo>/BrandKit
+```
+
+- Art comes from `brandkit.json` at the root of the game repo (one list of globs per BrandKit folder). A glob that matches nothing is an error, so a moved file is caught.
+- Sound is automatic: every audio file under `Assets/` except the third-party packs. The first word of the name decides (`SFX_`, `MUS_`), then the words music or bgm in the name or folder, then the length (about 20 s or more is music). Jingles and stings are SFX.
+- Sprites are automatic too: every other image under `Assets/` (2 KB to 15 MB, no third-party packs, no 3D texture maps, nothing already in `art`) goes to `<category>/Export/<path under Assets>`, the category guessed from its path and name: Screens, Characters, Currency, Backgrounds, UI, else Items. The guess is rough, so look at the result. `"sprites": false` turns it off, `"sprites": {"exclude": ["Assets/Environment"]}` skips folders.
+- Only what it manages is rewritten (the `brandkit.json` keys, `SFX`, `Music` and the `Export/` subfolders), so files added by hand, like `Screens/` itself, are kept.
+- Then commit `BrandKit/` and `brandkit.json`: the push triggers the workflow above.
+
+```json
+{
+  "game": "Tower Smash",
+  "art": {
+    "App icon":    ["Store/GooglePlay/Icon_512.png"],
+    "Game logos":  ["Store/PlaySmartApp/SPRITE_TitleBanner_*.png"],
+    "Backgrounds": ["Assets/Sprites/SPRITE_Background.png"]
+  }
+}
+```
