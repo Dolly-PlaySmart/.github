@@ -75,3 +75,52 @@ jobs:
 - `GH_TOKEN` — optional; PAT used by Unity to fetch private UPM packages from other org repos.
 
 The caller MUST pass these with `secrets: inherit` (or an explicit mapping) — public reusable workflows do not see private secrets unless the private caller forwards them.
+
+## brand-kit.yml
+
+Pushes a game's `BrandKit/` folder to the Creative Library (Brand assets), so creatives are built from the real game files. Safe on every push: a file already in the library (same SHA-256) is skipped, and a game the library does not know yet is created by its first upload. Uses the uploader `.github/scripts/brand_upload.py` (copy of `scripts/brand_upload.py` of the creative-library repo).
+
+```yaml
+# .github/workflows/brand-kit.yml in your game repo
+name: Brand kit
+on:
+  push:
+    branches: [main]
+    paths: ["BrandKit/**"]
+  pull_request:
+    paths: ["BrandKit/**"]
+  workflow_dispatch:
+jobs:
+  brand-kit:
+    uses: Dolly-PlaySmart/.github/.github/workflows/brand-kit.yml@main
+    with:
+      game-name: "Tower Smash"
+      dry-run: ${{ github.event_name == 'pull_request' }}
+    secrets: inherit
+```
+
+| Input | Default | Notes |
+| --- | --- | --- |
+| `game-name` | required | Exact name in the library (list below). An unknown name creates a new game. |
+| `kit-path` | `BrandKit` | Folder of the kit, relative to the repo root. |
+| `dry-run` | `false` | Lists what would be sent, sends nothing, does not use the key. Used on pull requests. |
+| `lfs` | `true` | Pulls Git LFS objects on checkout. |
+
+The run fails (red) if the folder is missing or empty, if the key is not available, or if any file fails to upload.
+
+**Key.** `CL_BRAND_KEY` is an organisation secret, passed with `secrets: inherit`. It can only list and add brand assets. Never put it in a variable, in the repo, in a log or in chat. A pull request only does a dry run and never uses the key.
+
+**Folder layout.** The category is the first folder under `BrandKit/` that matches one of these names. Any other folder lands in "Other", a sound file defaults to "Sound effects".
+
+```
+BrandKit/
+  Logo/        App icon/    Game logos/   Game icons/   Event icons/
+  Characters/  Backgrounds/ UI/           Game items/   Currency/
+  Screens/       gameplay screenshots (Game screens)
+  Screenshots/   Play Store screenshots (Store screenshots), optional
+  SFX/         Music/       Fonts/        Colours/
+```
+
+Unity `.meta`, `.psd` and hidden files are ignored. Files up to 300 MB.
+
+**Game names in the library.** Thrillz, Play Smart, Pengudoku, Knife King, Tower Smash, Mahjong Mania, Screw Scramble, Riddle Rails, Solitaire Stars, Black Jack, Bubble Shooter, Arrow Go!, Color Cascade, Fish Escape, Word Search Wonder, Glyph Garden, Checkmate Chess, Clue Cases, Draw Dots, Liquid Lab, Block Blitz, Color Block Escape.

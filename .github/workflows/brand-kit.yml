@@ -1,0 +1,117 @@
+name: Reusable Brand kit / Creative Library
+
+# Pushes a game's BrandKit/ folder to the Creative Library (Brand assets).
+# Safe to run on every push: a file already in the library (same SHA-256) is skipped.
+# See README.md in this folder for the caller and the folder layout.
+
+on:
+  workflow_call:
+    inputs:
+      game-name:
+        description: Exact game name in the Creative Library. A name the library does not know creates a new game.
+        type: string
+        required: true
+      kit-path:
+        description: Folder of the brand kit, relative to the repo root.
+        type: string
+        default: "BrandKit"
+      dry-run:
+        description: List what would be sent. Sends nothing and does not use the key.
+        type: boolean
+        default: false
+      lfs:
+        description: Pull Git LFS objects on checkout.
+        type: boolean
+        default: true
+    secrets:
+      CL_BRAND_KEY:
+        description: Brand upload key of the Creative Library. It can only list and add brand assets.
+        required: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: brand-kit-${{ inputs.game-name }}
+  cancel-in-progress: false
+
+jobs:
+  upload:
+    name: Brand kit
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: ${{ inputs.lfs }}
+
+      - name: Fetch the uploader
+        uses: actions/checkout@v4
+        with:
+          repository: Dolly-PlaySmart/.github
+          ref: main
+          path: .cl-tools
+          sparse-checkout: .github/scripts/brand_upload.py
+          sparse-checkout-cone-mode: false
+
+      - name: Check the kit folder
+        shell: bash
+        env:
+          KIT: ${{ inputs.kit-path }}
+        run: |
+          if [ ! -d "$KIT" ]; then
+            echo "::error::$KIT not found in this repo"
+            exit 1
+          fi
+          COUNT=$(find "$KIT" -type f ! -name '.*' | wc -l)
+          echo "$COUNT files in $KIT"
+          if [ "$COUNT" -eq 0 ]; then
+            echo "::error::$KIT is empty"
+            exit 1
+          fi
+
+      - name: Check the key is available
+        if: ${{ !inputs.dry-run }}
+        shell: bash
+        env:
+          CL_KEY: ${{ secrets.CL_BRAND_KEY }}
+        run: |
+          if [ -z "$CL_KEY" ]; then
+            echo "::error::CL_BRAND_KEY is empty or not shared with this repo (org secret, repository access)"
+            exit 1
+          fi
+
+      - name: Dry run (nothing is sent, the key is not used)
+        if: ${{ inputs.dry-run }}
+        shell: bash
+        env:
+          GAME: ${{ inputs.game-name }}
+          KIT: ${{ inputs.kit-path }}
+        run: |
+          set -o pipefail
+          python3 .cl-tools/.github/scripts/brand_upload.py --game "$GAME" "$KIT" --dry-run 2>&1 | tee "$RUNNER_TEMP/brand-upload.log"
+
+      - name: Upload to the Creative Library
+        if: ${{ !inputs.dry-run }}
+        shell: bash
+        env:
+          CL_KEY: ${{ secrets.CL_BRAND_KEY }}
+          GAME: ${{ inputs.game-name }}
+          KIT: ${{ inputs.kit-path }}
+        run: |
+          set -o pipefail
+          python3 .cl-tools/.github/scripts/brand_upload.py --game "$GAME" "$KIT" 2>&1 | tee "$RUNNER_TEMP/brand-upload.log"
+
+      - name: Summary
+        if: always()
+        shell: bash
+        env:
+          GAME: ${{ inputs.game-name }}
+        run: |
+          {
+            echo "### Brand kit: $GAME"
+            echo
+            echo '```'
+            tail -n 40 "$RUNNER_TEMP/brand-upload.log" 2>/dev/null || echo "no output"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
