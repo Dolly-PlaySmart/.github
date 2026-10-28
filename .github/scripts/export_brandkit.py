@@ -24,11 +24,17 @@ brandkit.json (at the root of the game repo):
     }
 - "game" must match the name in the Creative Library.
 - The "art" keys are BrandKit folder names: Logo, App icon, Game logos, Game icons, Event icons, Characters, Backgrounds,
-  UI, Game items, Currency, Screens (gameplay screenshots), Screenshots (Play Store), Fonts, Colours.
+  UI, Items (game objects, props, pieces), Currency, Screens (gameplay screenshots), Screenshots (Play Store), Fonts, Colours.
+  Use exactly these names: the uploader reads the category from them ("Game items" would land in Other, use "Items").
+- Sprites: every other image under Assets/ (png, jpg, webp, 2 KB to 15 MB, no third-party packs, no 3D texture maps, nothing
+  already listed in "art") goes to <category>/Export/<path under Assets>, with the category guessed from its path and name:
+  Screens (a Screenshots folder), Characters, Currency, Backgrounds (large files named bg/background), UI (ui, hud, button,
+  panel, popup, icon, title...), else Items. The guess is rough: look at the result. Turn it off with "sprites": false, or skip
+  folders with "sprites": {"exclude": ["Assets/Environment"]}.
 - "audio" is optional: "exclude" adds paths to skip, "music" adds words that mark a music file (when the name or folder has one).
 
-Only the folders this script manages (the "art" keys, SFX, Music) are rewritten on each run, so files added by hand in
-other folders (for example Screens/) are kept. Nothing is uploaded here: the brand-kit workflow does that on push.
+Only what this script manages is rewritten on each run (the "art" keys, SFX, Music and the Export/ subfolders), so files
+added by hand in other places (for example Screens/ itself) are kept. Nothing is uploaded here: the brand-kit workflow does that on push.
 """
 import argparse, glob, json, os, re, shutil, sys
 
@@ -56,6 +62,36 @@ def audio_kind(path, rel, music_words):
     if any(w in ("jingle", "sting", "stinger") for w in words):
         return "SFX"
     return "Music" if os.path.getsize(path) >= LONG_BYTES.get(ext, 2_000_000) else "SFX"
+
+
+IMAGES = {".png", ".jpg", ".jpeg", ".webp"}
+THIRD_IMG = THIRD | {"playsmart", "gizmos", "editor", "assetkits", "fonts", "font", "lightmaps", "lightmap", "__macosx"}
+THREED_MAP = re.compile(r"[_\-](normal|n|albedo|basecolor|metallic|metal|roughness|occlusion|ao|emission|height|mask|spec|specular|lightmap)\.(png|jpe?g)$", re.I)
+EXPORT_MIN, EXPORT_MAX = 2_048, 15_000_000  # bytes: tiny files are noise, huge ones are not sprites
+RE_SCREEN = re.compile(r"(^|/)screenshots?(/|$)")
+RE_CHAR = re.compile(r"character|mascot|avatar|hero|enemy|enemies|monster|npc|penguin")
+RE_CURRENCY = re.compile(r"coin|gem|diamond|currency|cash|reward|crown|trophy|chest|gift")
+RE_BG = re.compile(r"(^|[/_\W])(bg|background|backdrop|wallpaper)s?([/_\W0-9]|$)")
+RE_NOT_BG = re.compile(r"panel|slider|toggle|button|popup|header|footer|score|progress|pattern|glow|details|icon")
+RE_UI = re.compile(r"(^|[/_\W])(ui|gui|hud|buttons?|btn|panels?|popups?|menus?|icons?|toggles?|sliders?|settings?|pause|dialogs?|"
+                   r"tutorials?|frames?|ribbons?|banners?|titles?|bars?|badges?|cursors?)([/_\W0-9]|$)")
+
+
+def sprite_category(rel_assets, size):
+    """BrandKit folder of an image, from its path and name. The folder names are the ones the uploader knows."""
+    p = rel_assets.replace("\\", "/").lower()
+    stem = os.path.splitext(os.path.basename(p))[0]
+    if RE_SCREEN.search(p):
+        return "Screens"
+    if RE_CHAR.search(p):
+        return "Characters"
+    if RE_CURRENCY.search(stem):
+        return "Currency"
+    if RE_BG.search(stem) and not RE_NOT_BG.search(stem) and size >= 120_000:
+        return "Backgrounds"
+    if RE_UI.search(p):
+        return "UI"
+    return "Items"
 
 
 def is_third_party(rel, extra):
@@ -124,6 +160,29 @@ def main():
             seen[(kind, name.lower())] = src
             plan.append((src, os.path.join(kind, name)))
 
+    sprites_cfg = cfg.get("sprites", True)
+    auto_dirs = set()
+    if sprites_cfg:
+        sprites_cfg = sprites_cfg if isinstance(sprites_cfg, dict) else {}
+        sp_exclude = sprites_cfg.get("exclude", [])
+        taken = {os.path.normcase(os.path.abspath(s)) for s, _ in plan}
+        for root, dirs, files in os.walk(assets):
+            dirs[:] = sorted(d for d in dirs if not d.startswith(".") and d.lower() not in THIRD_IMG)
+            for f in sorted(files):
+                if os.path.splitext(f)[1].lower() not in IMAGES or THREED_MAP.search(f):
+                    continue
+                src = os.path.join(root, f)
+                size = os.path.getsize(src)
+                rel_repo = os.path.relpath(src, repo)
+                if not (EXPORT_MIN <= size <= EXPORT_MAX) or is_third_party(rel_repo, sp_exclude):
+                    continue
+                if os.path.normcase(os.path.abspath(src)) in taken:
+                    continue  # already exported through "art"
+                rel_assets = os.path.relpath(src, assets)
+                cat = sprite_category(rel_assets, size)
+                auto_dirs.add(cat)
+                plan.append((src, os.path.join(cat, "Export", rel_assets)))
+
     counts = {}
     for _, dst in plan:
         counts[dst.split(os.sep)[0]] = counts.get(dst.split(os.sep)[0], 0) + 1
@@ -135,7 +194,7 @@ def main():
         sys.exit(1)
     if not any(k in counts for k in ("SFX", "Music")):
         print("  ! no audio found under Assets/ (check brandkit.json, 'audio.exclude')")
-    missing = [c for c in ("App icon", "Game logos", "Characters", "Backgrounds", "UI", "Screens") if c not in counts]
+    missing = [c for c in ("App icon", "Game logos", "Characters", "Backgrounds", "UI", "Screens", "Items") if c not in counts]
     if missing:
         print("  not in the kit yet: " + ", ".join(missing))
 
@@ -146,6 +205,8 @@ def main():
     managed = set(art) | {"SFX", "Music"}
     for m in managed:
         shutil.rmtree(os.path.join(out, m), ignore_errors=True)
+    for c in ("UI", "Characters", "Currency", "Items", "Backgrounds", "Screens"):  # auto sprites: only their Export/ subfolder
+        shutil.rmtree(os.path.join(out, c, "Export"), ignore_errors=True)
     for src, dst in plan:
         d = os.path.join(out, dst)
         os.makedirs(os.path.dirname(d), exist_ok=True)
