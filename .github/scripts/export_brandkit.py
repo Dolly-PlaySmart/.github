@@ -9,7 +9,8 @@ What it exports
 - Art: the files listed in <repo>/brandkit.json, one list of globs per BrandKit folder (see below).
   A glob that matches nothing is an error, so a moved or renamed file is caught.
 - Sound: every audio file under Assets/ except the third-party packs (Feel, NiceVibrations, MaxSdk...).
-  A file whose name or folder says music / bgm / loop / theme goes to Music/, the rest to SFX/.
+  Music or SFX: the first word of the file name decides (SFX_..., AMB_... or MUS_..., BGM_...), then the words music / bgm in
+  the name or folder, then the length (a file of about 20 s or more is music). Jingles and stings are SFX.
 
 brandkit.json (at the root of the game repo):
     {
@@ -24,7 +25,7 @@ brandkit.json (at the root of the game repo):
 - "game" must match the name in the Creative Library.
 - The "art" keys are BrandKit folder names: Logo, App icon, Game logos, Game icons, Event icons, Characters, Backgrounds,
   UI, Game items, Currency, Screens (gameplay screenshots), Screenshots (Play Store), Fonts, Colours.
-- "audio" is optional: "exclude" adds paths to skip, "music" adds words that mark a music file.
+- "audio" is optional: "exclude" adds paths to skip, "music" adds words that mark a music file (when the name or folder has one).
 
 Only the folders this script manages (the "art" keys, SFX, Music) are rewritten on each run, so files added by hand in
 other folders (for example Screens/) are kept. Nothing is uploaded here: the brand-kit workflow does that on push.
@@ -34,7 +35,27 @@ import argparse, glob, json, os, re, shutil, sys
 AUDIO = {".wav", ".mp3", ".ogg", ".m4a"}
 THIRD = {"feel", "nicevibrations", "feeldemos", "feeldemosurp", "feeldemoshdrp", "mmfeedbacks", "plugins", "packages",
          "samples", "maxsdk", "externaldependencymanager", "firebase", "textmesh pro", "spine examples"}
-MUSIC = re.compile(r"music|bgm|bkg|loop|theme|ambient|beats|jingle", re.I)
+SFX_FIRST = {"sfx", "amb", "ambience", "fx", "ui", "vo", "voice", "sound"}  # first word of the file name
+MUSIC_FIRST = {"mus", "music", "bgm", "bg", "theme", "soundtrack"}
+LONG_BYTES = {".wav": 2_000_000, ".mp3": 700_000, ".ogg": 700_000, ".m4a": 700_000}  # about 20 s: longer is music
+
+
+def audio_kind(path, rel, music_words):
+    """Music or SFX. The first word of the file name decides (SFX_..., MUS_...), then the words music/bgm in the name or
+    folder, then the length (a long file is music). Jingles and stings are short effects."""
+    stem, ext = os.path.splitext(os.path.basename(path))
+    words = [w for w in re.split(r"[_\W]+", stem.lower()) if w]
+    first = words[0] if words else ""
+    if first in SFX_FIRST:
+        return "SFX"
+    if first in MUSIC_FIRST:
+        return "Music"
+    hay = (stem + " " + os.path.dirname(rel)).lower()
+    if "music" in hay or "bgm" in hay or any(m.lower() in hay for m in music_words):
+        return "Music"
+    if any(w in ("jingle", "sting", "stinger") for w in words):
+        return "SFX"
+    return "Music" if os.path.getsize(path) >= LONG_BYTES.get(ext, 2_000_000) else "SFX"
 
 
 def is_third_party(rel, extra):
@@ -64,7 +85,6 @@ def main():
     audio_cfg = cfg.get("audio", {})
     extra_exclude = audio_cfg.get("exclude", [])
     music_words = audio_cfg.get("music", [])
-    music_re = re.compile(MUSIC.pattern + ("|" + "|".join(map(re.escape, music_words)) if music_words else ""), re.I)
 
     plan = []  # (source, destination relative to out)
     errors = []
@@ -91,11 +111,17 @@ def main():
             rel = os.path.relpath(src, repo)
             if is_third_party(rel, extra_exclude):
                 continue
-            kind = "Music" if (music_re.search(f) or music_re.search(os.path.dirname(rel))) else "SFX"
+            kind = audio_kind(src, rel, music_words)
             name = f
-            if (kind, name) in seen:  # same file name in two folders: keep both
+            # names are compared in lower case: Windows and macOS file systems do not tell Foo.wav from foo.wav
+            if (kind, name.lower()) in seen:  # same file name in two folders: keep both
                 name = os.path.basename(root) + "_" + f
-            seen[(kind, name)] = src
+            n = 2
+            base, ext2 = os.path.splitext(name)
+            while (kind, name.lower()) in seen:  # still taken (same folder name twice): number it
+                name = f"{base}_{n}{ext2}"
+                n += 1
+            seen[(kind, name.lower())] = src
             plan.append((src, os.path.join(kind, name)))
 
     counts = {}
