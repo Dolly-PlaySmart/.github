@@ -124,3 +124,26 @@ BrandKit/
 Unity `.meta`, `.psd` and hidden files are ignored. Files up to 300 MB.
 
 **Game names in the library.** Thrillz, Play Smart, Pengudoku, Knife King, Tower Smash, Mahjong Mania, Screw Scramble, Riddle Rails, Solitaire Stars, Black Jack, Bubble Shooter, Arrow Go!, Color Cascade, Fish Escape, Word Search Wonder, Glyph Garden, Checkmate Chess, Clue Cases, Draw Dots, Liquid Lab, Block Blitz, Color Block Escape.
+
+**Exporting the kit from the game repo.** `.github/scripts/export_brandkit.py` builds `BrandKit/` from the repo, so it is rerun when the game changes. Clone `Dolly-PlaySmart/.github` once, then, from anywhere:
+
+```
+python3 .github/.github/scripts/export_brandkit.py <path to the game repo> --dry-run   # what would be copied
+python3 .github/.github/scripts/export_brandkit.py <path to the game repo>             # writes <repo>/BrandKit
+```
+
+- Art comes from `brandkit.json` at the root of the game repo (one list of globs per BrandKit folder). A glob that matches nothing is an error, so a moved file is caught.
+- Sound is automatic: every audio file under `Assets/` except the third-party packs. A name or folder that says music, bgm, loop or theme goes to `Music/`, the rest to `SFX/`.
+- Only the folders it manages are rewritten (the `brandkit.json` keys, `SFX`, `Music`), so files added by hand, like `Screens/`, are kept.
+- Then commit `BrandKit/` and `brandkit.json`: the push triggers the workflow above.
+
+```json
+{
+  "game": "Tower Smash",
+  "art": {
+    "App icon":    ["Store/GooglePlay/Icon_512.png"],
+    "Game logos":  ["Store/PlaySmartApp/SPRITE_TitleBanner_*.png"],
+    "Backgrounds": ["Assets/Sprites/SPRITE_Background.png"]
+  }
+}
+```
